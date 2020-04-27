@@ -1,4 +1,6 @@
 using System;
+using System.Reflection;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace PolishVATWebServices
 {
@@ -26,11 +29,33 @@ namespace PolishVATWebServices
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyAllowAllHeadersPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:5000/*")
+                            .AllowAnyHeader();
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -46,6 +71,13 @@ namespace PolishVATWebServices
             {
                 endpoints.MapControllers();
             });
+
+            
+            // app.Use( (request, response, next) => {
+            //     response.header("Access-Control-Allow-Origin", "*");
+            //     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            //     next();
+            // });
         }
     }
 }

@@ -20,7 +20,7 @@ namespace PolishVATTests
             {
                 new { 
                     Name = "Some good with 23% VAT", 
-                    VattType = VatType.VAT23, 
+                    VattType = 23, 
                     Quantity = 1, 
                     Price = 10 
                 }
@@ -42,19 +42,19 @@ namespace PolishVATTests
             {
                 new { 
                     Name = "Some good with 23% VAT", 
-                    VattType = VatType.VAT23, 
+                    VattType = 23, 
                     Quantity = 1, 
                     Price = 10 
                 },
                 new { 
                     Name = "Another good with 23% VAT", 
-                    VattType = VatType.VAT23, 
+                    VattType = 23, 
                     Quantity = 1, 
                     Price = 50
                 },
                 new { 
                     Name = "Just to have good with 23% VAT", 
-                    VattType = VatType.VAT23, 
+                    VattType = 23, 
                     Quantity = 1, 
                     Price = 100 
                 }
@@ -76,19 +76,19 @@ namespace PolishVATTests
             {
                 new { 
                     Name = "Some good with 23% VAT", 
-                    VattType = VatType.VAT23, 
+                    VattType = 23, 
                     Quantity = 1, 
                     Price = 10 
                 },
                 new { 
                     Name = "Some good with 8% VAT", 
-                    VattType = VatType.VAT8,
+                    VattType = 8,
                     Quantity = 1, 
                     Price = 10
                 },
                 new { 
                     Name = "And one with with 5% VAT", 
-                    VattType = VatType.VAT5, 
+                    VattType = 5, 
                     Quantity = 1, 
                     Price = 10 
                 }

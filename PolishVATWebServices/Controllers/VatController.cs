@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PolishVATLib;
 using System.Reflection;
+using System.Web.Http.Cors;
 
 namespace PolishVATWebServices.Controllers
 {
@@ -16,11 +17,13 @@ namespace PolishVATWebServices.Controllers
         private readonly IEnumerable<string> _vatRates;
 
         private readonly ILogger<VatController> _logger;
+        private readonly VATCalculator _vatCalculator;
 
         public VatController(ILogger<VatController> logger)
         {
             _logger = logger;
             _vatRates = new List<string>();
+            _vatCalculator = new VATCalculator();
         }
 
         private Assembly GetAssemblyByName(string name)
@@ -39,6 +42,59 @@ namespace PolishVATWebServices.Controllers
                 .ToList();
 
             return objects.Select(x => x.GetType().GetProperties()[0].GetValue(x).ToString()).ToList();
+        }
+
+        [HttpPost]
+        public string Post([FromBody] IEnumerable<PolishVATLib.Product> products)
+        {
+            if (products is null)
+            {
+                throw new ArgumentNullException(nameof(products));
+            }
+
+            var calculatedAmount = 0.0;
+
+            foreach(var good in products)
+                calculatedAmount += _vatCalculator.CalculateGross(good.VatType, good.Price, 
+                good.Quantity);
+
+            return $"Calculated gross price for products: {calculatedAmount.ToString ("0.##")}";
+        }
+
+        [HttpPost]
+        [Route("/net")]
+        public string PostNet([FromBody] IEnumerable<PolishVATLib.Product> products)
+        {
+            if (products is null)
+            {
+                throw new ArgumentNullException(nameof(products));
+            }
+
+            var calculatedAmount = 0.0;
+
+            foreach(var good in products)
+                calculatedAmount += _vatCalculator.CalculateNet(good.VatType, good.Price, 
+                good.Quantity);
+
+            return $"Calculated net price for products: {calculatedAmount.ToString ("0.##")}";
+        }
+
+        [HttpPost]
+        [Route("/tax")]
+        public string PostTax([FromBody] IEnumerable<PolishVATLib.Product> products)
+        {
+            if (products is null)
+            {
+                throw new ArgumentNullException(nameof(products));
+            }
+
+            var calculatedAmount = 0.0;
+
+            foreach(var good in products)
+                calculatedAmount += _vatCalculator.CalculateTax(good.VatType, good.Price, 
+                good.Quantity);
+
+            return $"Calculated tax price for products: {calculatedAmount.ToString ("0.##")}";
         }
     }
 }
