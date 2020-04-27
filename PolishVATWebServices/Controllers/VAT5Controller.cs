@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PolishVATLib;
 using System.Reflection;
+using PolishVATWebServices.Repositories;
 
 namespace PolishVATWebServices.Controllers
 {
@@ -13,11 +14,11 @@ namespace PolishVATWebServices.Controllers
     [Route("[controller]")]
     public class Vat5Controller : ControllerBase
     {
-        private readonly IVATCalculation _vatCalculation;
+        private readonly VATRepository _vatRepository;
 
         public Vat5Controller()
         {
-            _vatCalculation = new VAT5Calculation();
+            _vatRepository = new VATRepository(new VAT5Calculation());
         }
 
         [HttpGet]
@@ -25,8 +26,7 @@ namespace PolishVATWebServices.Controllers
         ///Calculate gross price
         public string Get(double price, int quantity)
         {
-            var grossPrice = _vatCalculation.CalculateGrossAmount(price) * quantity;
-            return $"Gross price: {grossPrice.ToString ("0.##")} for quantity: {quantity}";
+            return $"Gross price: {_vatRepository.Gross(price, quantity).ToString("0.##")} for quantity: {quantity}";
         }
 
         [HttpGet]
@@ -34,8 +34,7 @@ namespace PolishVATWebServices.Controllers
         ///Calculate net price
         public string Net(double price, int quantity)
         {
-            var netPrice = _vatCalculation.CalculateNetAmount(price) * quantity;
-            return $"Net price: {netPrice.ToString ("0.##")} for quantity: {quantity}";
+            return $"Net price: {_vatRepository.Net(price, quantity).ToString("0.##")} for quantity: {quantity}";
         }
 
         [HttpGet]
@@ -43,8 +42,7 @@ namespace PolishVATWebServices.Controllers
         ///Calculate tax
         public string Tax(double price, int quantity)
         {
-            var tax = _vatCalculation.CalculateTax(price) * quantity;
-            return $"Tax: {tax.ToString ("0.##")} for quantity: {quantity}";
+            return $"Tax: {_vatRepository.Tax(price, quantity).ToString("0.##")} for quantity: {quantity}";
         }
     }
 }
