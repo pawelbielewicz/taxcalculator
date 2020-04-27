@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PolishVATLib;
 using System.Reflection;
-using System.Web.Http.Cors;
 
 namespace PolishVATWebServices.Controllers
 {

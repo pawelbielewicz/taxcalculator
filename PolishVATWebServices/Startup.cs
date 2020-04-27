@@ -34,16 +34,6 @@ namespace PolishVATWebServices
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("MyAllowAllHeadersPolicy",
-                    builder =>
-                    {
-                        builder.WithOrigins("https://localhost:5000/*")
-                            .AllowAnyHeader();
-                    });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,13 +61,7 @@ namespace PolishVATWebServices
             {
                 endpoints.MapControllers();
             });
-
             
-            // app.Use( (request, response, next) => {
-            //     response.header("Access-Control-Allow-Origin", "*");
-            //     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            //     next();
-            // });
         }
     }
 }
