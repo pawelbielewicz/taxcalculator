@@ -7,4 +7,6 @@
         double CalculateGrossAmount(double netPrice);
         double CalculateNetAmount(double grossPrice);
     }
+
+    
 }
