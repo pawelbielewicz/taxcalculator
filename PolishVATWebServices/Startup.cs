@@ -30,6 +30,8 @@ namespace PolishVATWebServices
         {
             services.AddControllers();
 
+            services.AddCors();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -62,6 +64,10 @@ namespace PolishVATWebServices
                 endpoints.MapControllers();
             });
             
+            app.UseCors( options =>
+                options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
+            );
+
         }
     }
 }
