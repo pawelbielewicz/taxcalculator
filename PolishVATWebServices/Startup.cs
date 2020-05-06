@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 
 namespace PolishVATWebServices
 {
@@ -28,30 +29,49 @@ namespace PolishVATWebServices
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
 
-            services.AddCors();
+            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
+
+            // services.AddSpaStaticFiles(configuration =>
+            // {
+            // configuration.RootPath = "ClientApp/dist";
+            // });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("CorsPolicy");
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
 
             app.UseHttpsRedirection();
 
@@ -61,12 +81,23 @@ namespace PolishVATWebServices
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
             });
-            
-            app.UseCors( options =>
-                options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
-            );
+
+            // app.UseSpa(spa =>
+            // {
+            //     // To learn more about options for serving an Angular SPA from ASP.NET Core,
+            //     // see https://go.microsoft.com/fwlink/?linkid=864501
+
+            //     spa.Options.SourcePath = "ClientApp";
+
+            //     if (env.IsDevelopment())
+            //     {
+            //         spa.UseAngularCliServer(npmScript: "start");
+            //     }
+            // });
 
         }
     }

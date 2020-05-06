@@ -1,0 +1,10 @@
+<div class="container">
+    <table class="table">
+        <tr ngclass="btn-primary">
+            <th class="tbl2">VAT Name</th>
+        </tr>
+        <tr *ngFor="let vat of allProducts | async">
+            <td class="tbl2">{{vat}}</td>
+        </tr>
+    </table>
+</div>
