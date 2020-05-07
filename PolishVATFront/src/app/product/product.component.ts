@@ -14,7 +14,7 @@ export class ProductComponent implements OnInit {
 
   dataSaved = false;
   productForm: any;
-  allProducts: Observable<string[]>;
+  allVats: Observable<string[]>;
   productIdUpdate = null;
   massage = null;
 
@@ -22,17 +22,16 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.productForm = this.formbulider.group({
-      EmpName: ['', [Validators.required]],
-      DateOfBirth: ['', [Validators.required]],
-      EmailId: ['', [Validators.required]],
-      Gender: ['', [Validators.required]],
-      Address: ['', [Validators.required]],
-      PinCode: ['', [Validators.required]],
+      Name: ['', [Validators.required]],
+      Price: ['', [Validators.required]],
+      Quantity: ['', [Validators.required]],
+      VatName: ['', [Validators.required]]
     });
-    this.loadAllEmployees();
+    this.loadAllVats();
   }
-  loadAllEmployees() {
-    this.allProducts = this.productService.getAllProducts();
+
+  loadAllVats() {
+    this.allVats = this.productService.getAllVats();
   }
 
 
