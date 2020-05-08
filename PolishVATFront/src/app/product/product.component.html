@@ -1,10 +1,54 @@
 <div class="container">
-    <table class="table">
-        <tr ngclass="btn-primary">
-            <th class="tbl2">VAT Name</th>
-        </tr>
-        <tr *ngFor="let vat of allVats | async">
-            <td class="tbl2">{{vat}}</td>
-        </tr>
-    </table>
+    <div id="taxRates">
+        <h3>Available VAT Tax rates in Poland:</h3>
+        <table class="table">
+            <tr ngclass="btn-primary">
+                <th class="tbl2">VAT rate</th>
+            </tr>
+            <tr *ngFor="let vat of allVats | async">
+                <td class="tbl2">{{vat}}</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h3>Calculate your products</h3>
+        <p>
+            Choose your operation:
+        </p>
+        <div id="radiogroup">
+            <input type="radio" id="gross" name="myOperation" value="gross" />
+            <label for="gross">Calculate gross amount</label>
+            <input type="radio" id="net" name="myOperation" value="net" />
+            <label for="net">Calculate net amount</label>
+            <input type="radio" id="tax" name="myOperation" value="tax" />
+            <label for="tax">Calculate tax</label>
+        </div>
+        <div id="newProduct">
+            <p>Enter your product:</p>
+            <form [formGroup]="productForm" (ngSubmit)="onFormSubmit()">
+
+                <label>
+                    Product name:
+                    <input type="text" formControlName="prodName">
+                </label>
+                <br />
+                <label>
+                    Price:
+                    <input type="text" formControlName="prodPrice">
+                </label>
+                <br />
+                <label>
+                    Quantity:
+                    <input type="text" formControlName="prodQuantity">
+                </label>
+                <br />
+                <label>
+                    VAT type:
+                    <input type="text" formControlName="prodVat">
+                </label>
+                <br />
+                <button type="submit" [disabled]="!productForm.valid">Submit</button>
+            </form>
+        </div>
+    </div>
 </div>
