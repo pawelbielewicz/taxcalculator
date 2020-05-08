@@ -40,13 +40,13 @@ namespace PolishVATWebServices.Controllers
                 .Select(x => (IVATCalculation)Activator.CreateInstance(x, null))
                 .ToList();
 
-            return objects.Select(x => x.GetType().GetProperties()[0].GetValue(x).ToString()).ToList();
+            return objects.Select(x => x.GetType().GetProperties()[0].GetValue(x).ToString());
         }
 
         [HttpPost]
         public string Post([FromBody] IEnumerable<PolishVATLib.Product> products)
         {
-            if (products is null)
+            if (products is null || products.Count() == 0)
             {
                 throw new ArgumentNullException(nameof(products));
             }
